@@ -1,1 +1,36 @@
+name: code-linter
+on: 
+    push: 
+        branches: [ main ]
+        paths:
+        - 'backend/**'
+        - 'frontend/**'
+        - 'kubernetes/**'
+    workflow_dispatch:
+permissions:
+    contents: write
+jobs:
+   Code-linter: 
+     runs-on: ubuntu-latest
+     steps: 
 
+        - name:  Checkout code
+          uses: actions/checkout@v4
+
+        - name:  Set up Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 20 
+            cache: 'npm'
+
+        - name:  Install dependencies
+          run: npm ci
+ 
+        - name: Lint 
+          run: npm run lint
+
+        - name:  Format Check 
+          run: npx prettier --check .
+
+        - name:  Run Tests & Coverage
+          run: npm test -- --coverage
