@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: harsh9308/blog-app-backend:85d6657
+          image: harsh9308/blog-app-backend:49be039
           ports:
             - containerPort: 8080
 ---
