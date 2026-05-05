@@ -1,0 +1,15 @@
+name: Secret leak Check
+on: 
+    push: 
+jobs: 
+    Git_Secret_Check: 
+        runs-on: ubuntu-latest
+        steps: 
+             - name: code-checkout
+               uses: actions/checkout@v4
+    
+
+             - name: Gitleaks Scan
+               uses: gitleaks/gitleaks-action@v2
+               env:
+                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
