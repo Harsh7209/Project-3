@@ -69,11 +69,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Update Kubernetes frontend deployment
+      - name: Update Kubernetes backend deployment
         run: |
           sed -i "s|image: ${{ env.DOCKERHUB_REPO_1 }}:.*|image: ${{ env.DOCKERHUB_REPO_1 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/backend.yaml
      
-      - name: Update Kubernetes backend deployment
+      - name: Update Kubernetes frontend deployment
         run: |
           sed -i "s|image: ${{ env.DOCKERHUB_REPO_2 }}:.*|image: ${{ env.DOCKERHUB_REPO_2 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/frontend.yaml
 
@@ -84,5 +84,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add kubernetes/backend.yaml
           git add kubernetes/frontend.yaml
-          git diff --staged --quiet || git commit -m "ci: update bankapp image to ${{ steps.tag.outputs.sha_short }}"
+          git diff --staged --quiet || git commit -m "ci: update bankapp image to ${{ steps.tag.outputs.sha_short }} [skip ci]"
           git push
