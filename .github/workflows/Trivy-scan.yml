@@ -54,5 +54,5 @@ jobs:
         with:
           image-ref: harsh9308/blog-app-backend:${{ steps.tag.outputs.sha_short }}
           format: "table"
-          severity: "CRITICAL"
+          severity: "HIGH"
           exit-code: 1
