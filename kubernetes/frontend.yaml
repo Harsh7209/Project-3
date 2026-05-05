@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: harsh9308/blog-app-frontend:b1334cc
+          image: harsh9308/blog-app-frontend:85d6657
           ports:
             - containerPort: 5173
 ---
