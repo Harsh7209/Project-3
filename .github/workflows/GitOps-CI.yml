@@ -1,12 +1,6 @@
 name: Ci Pipeline for Blogging application
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'backend/**'
-      -  'frontend/**'
-      - 'kubernetes/**'
   workflow_dispatch:
 
 permissions:
