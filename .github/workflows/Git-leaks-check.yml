@@ -1,6 +1,6 @@
 name: Secret leak Check
 on: 
-    push: 
+    workflow_dispatch: 
 jobs: 
     Git_Secret_Check: 
         runs-on: ubuntu-latest
