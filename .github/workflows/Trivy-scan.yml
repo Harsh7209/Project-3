@@ -12,7 +12,7 @@ jobs:
 
             - name: Build Docker Image
               run: |
-               docker build -t harsh9308/blog-app:${{ github.sha }} .
+               docker build -t harsh9308/blog-app:${{ github.sha }} ./frontend/Dockerfile
 
 
 
