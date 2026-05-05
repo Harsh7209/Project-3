@@ -1,0 +1,35 @@
+name: Final DevSecOps pipeline
+on:
+  workflow_dispatch:
+jobs:
+  secret_leak_check:
+    uses: ./.github/workflows/Git-leaks-check.yml
+    secrets: inherit
+
+  packages_check:
+    uses: ./.github/workflows/OWASP-dependency-check.yml
+    secrets: inherit
+
+  docker_file_scan_frontend:
+    uses: ./.github/workflows/DockerFile-lint-frontend.yml
+    secrets: inherit
+
+  docker_file_scan_backend:
+    uses: ./.github/workflows/DockerFile-lint-backend.yml
+    secrets: inherit
+
+  trivy_image_scan:
+    needs:
+      [
+        "docker_file_scan_backend",
+        "docker_file_scan_frontend",
+        "packages_check",
+        "secret_leak_check",
+      ]
+    uses: ./.github/workflows/Trivy-scan.yml
+    secrets: inherit
+
+  Gitops-CI:
+    needs: ["trivy_image_scan"]
+    uses: ./.github/workflows/CI.yml
+    secrets: inherit
