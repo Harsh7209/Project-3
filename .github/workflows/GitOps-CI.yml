@@ -7,8 +7,8 @@ permissions:
   contents: write
 
 env:
-  DOCKERHUB_REPO-1: harsh9308/blog-app-backend
-  DOCKERHUB_REPO-2: harsh9308/blog-app-frontend
+  DOCKERHUB_REPO_1: harsh9308/blog-app-backend
+  DOCKERHUB_REPO_2: harsh9308/blog-app-frontend
 
 jobs:
   build-and-push:
@@ -50,8 +50,8 @@ jobs:
           file: backend/Dockerfile
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPO-1 }}:latest
-            ${{ env.DOCKERHUB_REPO-1 }}:${{ steps.tag.outputs.sha_short }}
+            ${{ env.DOCKERHUB_REPO_1 }}:latest
+            ${{ env.DOCKERHUB_REPO_1 }}:${{ steps.tag.outputs.sha_short }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
