@@ -1,4 +1,4 @@
-name: Docker file scan
+name: Docker file scan for frontend
 on: 
     push:
 jobs: 
