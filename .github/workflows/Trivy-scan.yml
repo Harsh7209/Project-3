@@ -8,12 +8,15 @@ jobs:
             - name: code-checkout
               uses: actions/checkout@v4
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
 
             - name: Build Docker Image
               run: |
-               docker build -t harsh9308/blog-app:${{ github.sha }} ./frontend/Dockerfile
-
+                     docker build \
+                     -t harsh9308/blog-app:${{ github.sha }} \
+                     -f ./frontend/Dockerfile 
 
 
             - name: Run trivi scan
