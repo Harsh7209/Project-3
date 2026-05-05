@@ -1,6 +1,6 @@
 name: OWASP Dependency Check
 on: 
-    push:
+    workflow_dispatch:
 
 jobs:
   dependency-check:
