@@ -1,0 +1,14 @@
+name: Docker file scan
+on: 
+    push:
+jobs: 
+    Docker_file_scan:
+        runs-on: ubuntu-latest
+        steps: 
+            - name: checkout code
+              uses: actions/checkout@v6
+
+            - name: dockerfile scanning
+              uses: hadolint/hadolint-action@v3.1.0
+              with: 
+                dockerfile: ./frontend/Dockerfile
