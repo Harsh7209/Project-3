@@ -69,11 +69,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Update Kubernetes deployment manifest
+      - name: Update Kubernetes frontend deployment
         run: |
           sed -i "s|image: ${{ env.DOCKERHUB_REPO_1 }}:.*|image: ${{ env.DOCKERHUB_REPO_1 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/backend.yaml
      
-      - name: Update Kubernetes migration job manifest
+      - name: Update Kubernetes backend deployment
         run: |
           sed -i "s|image: ${{ env.DOCKERHUB_REPO_2 }}:.*|image: ${{ env.DOCKERHUB_REPO_2 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/frontend.yaml
 
