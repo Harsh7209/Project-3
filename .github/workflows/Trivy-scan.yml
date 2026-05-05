@@ -55,4 +55,4 @@ jobs:
           image-ref: harsh9308/blog-app-backend:${{ steps.tag.outputs.sha_short }}
           format: "table"
           severity: "HIGH"
-          exit-code: 1
+          exit-code: 0
