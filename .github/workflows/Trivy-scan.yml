@@ -1,6 +1,6 @@
 name: Trivy image scan
 on: 
-    workflow_call:
+    workflow_dispatch:
 jobs: 
     Trivy_scan:
         runs-on: ubuntu-latest
