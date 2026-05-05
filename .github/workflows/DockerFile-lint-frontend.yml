@@ -2,7 +2,7 @@ name: Docker file scan for frontend
 on: 
     push:
 jobs: 
-    Docker_file_scan:
+    Docker_file_scan_for_frontend:
         runs-on: ubuntu-latest
         steps: 
             - name: checkout code

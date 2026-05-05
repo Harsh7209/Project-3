@@ -2,7 +2,7 @@ name: Docker file scan for backend
 on: 
     push: 
 jobs: 
-    Docker_file_scan:  
+    Docker_file_scan_backend:  
       runs-on: ubuntu-latest
       steps: 
         - name: checkout code
@@ -11,5 +11,5 @@ jobs:
         - name: dockerfile scanning
           uses: hadolint/hadolint-action@v3.1.0
           with: 
-            dockerfile: ./frontend/Dockerfile
+            dockerfile: ./backend/Dockerfile
             failure-threshold: warning 
