@@ -25,6 +25,18 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Make script executable for backend .sh
+        run: chmod +x ./Automations/updatebackendnew.sh
+
+      - name: Run script for backend.sh
+        run:  bash ./Automations/updatebackendnew.sh
+
+      - name: Make script executable for frontend.sh
+        run: chmod +x ./Automations/updatefrontendnew.sh
+
+      - name: Run script for frontend.sh
+        run:  bash ./Automations/updatebackendnew.sh
+
       - name: Set image tag
         id: tag
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"

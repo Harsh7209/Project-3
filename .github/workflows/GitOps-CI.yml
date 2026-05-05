@@ -43,10 +43,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and Push Docker image
+      - name: Build and Push Docker image for backend
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./backend
           file: backend/Dockerfile
           push: true
           tags: |
@@ -57,10 +57,10 @@ jobs:
 
 
 
-      - name: Build and Push Docker migration image
+      - name: Build and Push Docker image  for frontend
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./frontend
           file: frontend/Dockerfile
           push: true
           tags: |
@@ -71,18 +71,18 @@ jobs:
 
       - name: Update Kubernetes deployment manifest
         run: |
-          sed -i "s|image: ${{ env.DOCKERHUB_REPO_1 }}:.*|image: ${{ env.DOCKERHUB_REPO_1 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/08-easyshop-deployment.yaml
+          sed -i "s|image: ${{ env.DOCKERHUB_REPO_1 }}:.*|image: ${{ env.DOCKERHUB_REPO_1 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/backend.yaml
      
       - name: Update Kubernetes migration job manifest
         run: |
-          sed -i "s|image: ${{ env.DOCKERHUB_REPO_2 }}:.*|image: ${{ env.DOCKERHUB_REPO_2 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/12-migration-job.yaml
+          sed -i "s|image: ${{ env.DOCKERHUB_REPO_2 }}:.*|image: ${{ env.DOCKERHUB_REPO_2 }}:${{ steps.tag.outputs.sha_short }}|" kubernetes/frontend.yaml
 
 
       - name: Commit updated manifest
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add kubernetes/08-easyshop-deployment.yaml
-          git add kubernetes/12-migration-job.yaml
-          git diff --staged --quiet || git commit -m "ci: update bankapp image to ${{ steps.tag.outputs.sha_short }} [skip ci]"
+          git add kubernetes/backend.yaml
+          git add kubernetes/frontend.yaml
+          git diff --staged --quiet || git commit -m "ci: update bankapp image to ${{ steps.tag.outputs.sha_short }}"
           git push
