@@ -1,29 +1,180 @@
-HARSH CHOUBEY
-harshchoubey113@gmail.com • linkedin.com/in/harshchoubey113 • github.com/Harsh7209
+# 🚀 GitOps Blogging Application (DevSecOps Enabled)
 
-Dear Hiring Manager,
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)
+![Docker](https://img.shields.io/badge/Container-Docker-blue)
+![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-blue)
+![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-orange)
+![Monitoring](https://img.shields.io/badge/Monitoring-Prometheus%20%7C%20Grafana-green)
 
-I'm excited to apply for the DevOps Internship position. As someone graduating this June with a passion for infrastructure and systems, I'm at the perfect point in my journey to grow alongside a talented team.
+---
 
-Here's what sets me apart: I haven't waited for a job to start learning DevOps. Over the past year, I've deliberately built production-grade projects to understand how modern infrastructure works. My flagship project is a multi-tier application deployed on AWS EKS—a project that forced me to learn the full DevOps lifecycle from scratch.
+## 📌 Project Overview
 
-Through this project, I built real-world systems that taught me:
-- Infrastructure as Code with Terraform (VPCs, EKS clusters, managed storage, IRSA)
-- CI/CD pipeline development with GitHub Actions (7-stage pipeline with security scanning: GitLeaks, OWASP, Trivy, Kubernetes validation)
-- GitOps workflows using ArgoCD for automated, version-controlled infrastructure
-- Container orchestration with Kubernetes (StatefulSets, ConfigMaps, Secrets, probes, init containers)
-- Observability with Prometheus and Grafana in a production environment
-- Containerization with Docker and package management with Helm
+This project is a **full-stack blogging application** built using modern web technologies and deployed using a **complete GitOps + DevSecOps pipeline**.
 
-But what I value most isn't just the tools I've learned—it's the problem-solving mindset. I've intentionally broken systems to understand why they fail. I've debugged CrashLoopBackOffing pods, resolved ArgoCD sync issues, and figured out networking problems at 2 AM because I was genuinely curious about the "why."
+It demonstrates **end-to-end automation**, starting from code commit to secure deployment on a **Kubernetes (Amazon EKS) cluster**, ensuring scalability, security, and reliability.
 
-As an intern, I'm looking for an opportunity to bring this hands-on learning approach to your team. I want to work alongside experienced engineers who can teach me the nuances of production DevOps—the decisions that matter, the tradeoffs that shape real systems, and the practices that separate good infrastructure from great infrastructure.
+---
 
-What I bring as an intern isn't years of experience—it's something potentially more valuable: genuine curiosity, a learning mindset that won't quit, and a proven ability to take on challenges outside my comfort zone and push through until I understand them completely. I document what I learn. I ask thoughtful questions. I'm coachable and eager to contribute meaningfully from day one.
+## ✨ Key Features
 
-I'm not just looking for a resume line—I'm looking for a place to grow, to learn from the best, and to start building a foundation for a long career in DevOps. If that resonates with your team, I'd love to discuss how I can add value during my internship.
+* 📝 Create, Read, Update, Delete (CRUD) blog posts
+* 🔐 Secure DevSecOps CI/CD pipeline
+* ⚡ Fully automated deployment using GitOps
+* 🐳 Containerized application using Docker
+* ☸️ Kubernetes orchestration on Amazon EKS
+* 🔍 Integrated security scanning at multiple stages
+* 📊 Monitoring with Prometheus & Grafana
+* 🔄 Continuous deployment with Argo CD
 
-Thank you for considering my application. I look forward to talking with you.
+---
 
-Best regards,
-Harsh Choubey
+## 🛠️ Tech Stack
+
+| Layer            | Technology          |
+| ---------------- | ------------------- |
+| Frontend         | React.js            |
+| Backend          | Node.js (Express)   |
+| Containerization | Docker              |
+| Orchestration    | Kubernetes (EKS)    |
+| CI/CD            | GitHub Actions      |
+| GitOps           | Argo CD             |
+| Monitoring       | Prometheus, Grafana |
+
+---
+
+## 🏗️ Architecture Diagram
+
+```mermaid
+flowchart LR
+    Dev[Developer] -->|Push Code| GitHub
+    GitHub -->|Trigger| GHA[GitHub Actions]
+
+    GHA --> Gitleaks
+    GHA --> OWASP
+    GHA --> Hadolint
+
+    GHA --> Build[Docker Build]
+    Build --> Trivy
+
+    Trivy --> DockerHub[(DockerHub)]
+    DockerHub --> Update[K8s Manifest Update]
+
+    Update --> GitHub
+
+    GitHub --> ArgoCD[Argo CD]
+    ArgoCD --> EKS[(Amazon EKS Cluster)]
+
+    EKS --> Prometheus
+    Prometheus --> Grafana
+```
+
+---
+
+## 🔄 CI/CD + DevSecOps Workflow
+
+### Step-by-Step Pipeline
+
+1. 👨‍💻 Developer pushes code to GitHub
+2. ⚙️ GitHub Actions pipeline is triggered
+
+### 🔐 Security & Quality Checks
+
+* 🔍 **Gitleaks** → Detects secrets in code
+* 🛡️ **OWASP Dependency Check** → Finds vulnerable dependencies
+* 🐳 **Hadolint** → Lints Dockerfile
+
+### 🏗️ Build & Security
+
+* Docker image is built
+* 🔎 **Trivy** scans image for vulnerabilities
+
+### 🚀 Deployment Preparation
+
+* Image is pushed to DockerHub
+* Kubernetes manifests are updated with new image tag
+
+### 🔁 GitOps Deployment
+
+* Argo CD continuously monitors GitHub repository
+* Detects manifest changes
+* Automatically syncs and deploys to EKS
+
+✅ **Argo CD is fully configured and actively running this application on the Amazon EKS cluster.**
+
+---
+
+## 🧰 Tools Used
+
+* Gitleaks
+* OWASP Dependency Check
+* Hadolint
+* Trivy
+* Docker
+* Kubernetes
+* GitHub Actions
+* Argo CD
+* Prometheus
+* Grafana
+
+---
+
+## 📁 Folder Structure
+
+```
+project-root/
+│
+├── frontend/           # React app
+├── backend/            # Node.js API
+├── k8s/                # Kubernetes manifests
+├── .github/workflows/  # CI/CD pipelines
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
+```
+---
+
+## ☸️ Deployment Process (EKS + Argo CD)
+
+1. Build and push Docker image
+2. Update Kubernetes manifests
+3. Push changes to GitHub
+4. Argo CD detects changes
+5. Automatically deploys to EKS cluster
+
+📌 Argo CD ensures **continuous synchronization** between GitHub and the cluster.
+
+---
+
+## 📊 Monitoring Setup
+
+* **Prometheus** collects metrics from Kubernetes cluster
+* **Grafana** visualizes metrics via dashboards
+
+Example metrics:
+
+* CPU usage
+* Memory usage
+* Pod health
+* Application performance
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## ⭐ Final Note
+
+This project showcases **real-world DevSecOps practices**, combining:
+
+* CI/CD automation
+* Security-first pipeline
+* GitOps deployment
+* Kubernetes orchestration
+
+Perfect for **DevOps portfolios, interviews, and production-ready architecture demonstrations**.
+
+---
