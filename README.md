@@ -1,180 +1,259 @@
-# 🚀 GitOps Blogging Application (DevSecOps Enabled)
+# 🐳 Docker Troubleshooter Agent
 
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)
-![Docker](https://img.shields.io/badge/Container-Docker-blue)
-![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-blue)
-![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-orange)
-![Monitoring](https://img.shields.io/badge/Monitoring-Prometheus%20%7C%20Grafana-green)
+<div align="center">
 
----
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-Local_LLM-black?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-## 📌 Project Overview
+**An autonomous AI agent that diagnoses and reasons about Docker container issues — powered by a local LLM, zero cloud dependencies.**
 
-This project is a **full-stack blogging application** built using modern web technologies and deployed using a **complete GitOps + DevSecOps pipeline**.
+[Features](#-features) · [Architecture](#-architecture) · [Installation](#-installation) · [Usage](#-usage) · [How It Works](#-how-it-works) · [Contributing](#-contributing)
 
-It demonstrates **end-to-end automation**, starting from code commit to secure deployment on a **Kubernetes (Amazon EKS) cluster**, ensuring scalability, security, and reliability.
-
----
-
-## ✨ Key Features
-
-* 📝 Create, Read, Update, Delete (CRUD) blog posts
-* 🔐 Secure DevSecOps CI/CD pipeline
-* ⚡ Fully automated deployment using GitOps
-* 🐳 Containerized application using Docker
-* ☸️ Kubernetes orchestration on Amazon EKS
-* 🔍 Integrated security scanning at multiple stages
-* 📊 Monitoring with Prometheus & Grafana
-* 🔄 Continuous deployment with Argo CD
+</div>
 
 ---
 
-## 🛠️ Tech Stack
+## 🧠 What Is This?
 
-| Layer            | Technology          |
-| ---------------- | ------------------- |
-| Frontend         | React.js            |
-| Backend          | Node.js (Express)   |
-| Containerization | Docker              |
-| Orchestration    | Kubernetes (EKS)    |
-| CI/CD            | GitHub Actions      |
-| GitOps           | Argo CD             |
-| Monitoring       | Prometheus, Grafana |
+Docker Troubleshooter Agent is a **ReAct-based AI agent** that autonomously investigates your Docker environment. You ask a question in plain English — the agent decides which tools to call, interprets the results, reasons through the problem, and delivers a diagnosis.
 
----
+No more copy-pasting `docker ps -a` output into ChatGPT. The agent *does the digging itself.*
 
-## 🏗️ Architecture Diagram
+```
+> Why is my postgres container restarting?
 
-```mermaid
-flowchart LR
-    Dev[Developer] -->|Push Code| GitHub
-    GitHub -->|Trigger| GHA[GitHub Actions]
+Thinking...
 
-    GHA --> Gitleaks
-    GHA --> OWASP
-    GHA --> Hadolint
+I'll start by listing all containers to find the postgres container...
+[Calls: list_containers]
 
-    GHA --> Build[Docker Build]
-    Build --> Trivy
+Found container 'postgres' with status 'Restarting (1) 3 seconds ago'.
+Now I'll pull the logs to understand the crash reason...
+[Calls: get_logs(postgres)]
 
-    Trivy --> DockerHub[(DockerHub)]
-    DockerHub --> Update[K8s Manifest Update]
-
-    Update --> GitHub
-
-    GitHub --> ArgoCD[Argo CD]
-    ArgoCD --> EKS[(Amazon EKS Cluster)]
-
-    EKS --> Prometheus
-    Prometheus --> Grafana
+The logs reveal: "FATAL: data directory /var/lib/postgresql/data has wrong ownership"
+This is a volume permission issue. Here's how to fix it...
 ```
 
 ---
 
-## 🔄 CI/CD + DevSecOps Workflow
+## ✨ Features
 
-### Step-by-Step Pipeline
-
-1. 👨‍💻 Developer pushes code to GitHub
-2. ⚙️ GitHub Actions pipeline is triggered
-
-### 🔐 Security & Quality Checks
-
-* 🔍 **Gitleaks** → Detects secrets in code
-* 🛡️ **OWASP Dependency Check** → Finds vulnerable dependencies
-* 🐳 **Hadolint** → Lints Dockerfile
-
-### 🏗️ Build & Security
-
-* Docker image is built
-* 🔎 **Trivy** scans image for vulnerabilities
-
-### 🚀 Deployment Preparation
-
-* Image is pushed to DockerHub
-* Kubernetes manifests are updated with new image tag
-
-### 🔁 GitOps Deployment
-
-* Argo CD continuously monitors GitHub repository
-* Detects manifest changes
-* Automatically syncs and deploys to EKS
-
-✅ **Argo CD is fully configured and actively running this application on the Amazon EKS cluster.**
+| Feature | Details |
+|---|---|
+| 🤖 **Autonomous reasoning** | Uses the ReAct loop — Reason → Act → Observe — to iteratively diagnose issues without hand-holding |
+| 🔒 **Fully local** | Runs on [Ollama](https://ollama.com) with `gemma4` — your container data never leaves your machine |
+| 🛠️ **Built-in Docker tools** | Lists containers, fetches logs, and deep-inspects container configs in one agent |
+| 💬 **Natural language interface** | Ask questions the way you'd ask a senior DevOps engineer |
+| 🔌 **Extensible** | Add new tools (e.g., `docker stats`, `docker network inspect`) in minutes |
+| ⚡ **Lightweight** | Pure Python, minimal dependencies, no infrastructure to manage |
 
 ---
 
-## 🧰 Tools Used
-
-* Gitleaks
-* OWASP Dependency Check
-* Hadolint
-* Trivy
-* Docker
-* Kubernetes
-* GitHub Actions
-* Argo CD
-* Prometheus
-* Grafana
-
----
-
-## 📁 Folder Structure
+## 🏗️ Architecture
 
 ```
-project-root/
+┌─────────────────────────────────────────────────────────┐
+│                    User (CLI Input)                      │
+└───────────────────────┬─────────────────────────────────┘
+                        │ natural language question
+                        ▼
+┌─────────────────────────────────────────────────────────┐
+│              LangChain ReAct Agent                       │
+│                                                          │
+│   ┌──────────────────────────────────────────────────┐  │
+│   │              ChatOllama (gemma4)                  │  │
+│   │         Reason → Plan → Decide tool               │  │
+│   └───────────┬──────────────────────────────────────┘  │
+│               │                                          │
+│   ┌───────────▼──────────────────────────────────────┐  │
+│   │              Tool Dispatcher                      │  │
+│   └───┬───────────────┬──────────────────┬───────────┘  │
+│       │               │                  │               │
+│  ┌────▼────┐   ┌──────▼──────┐   ┌──────▼──────┐        │
+│  │  list_  │   │  get_logs   │   │  inspect_   │        │
+│  │containe-│   │(container)  │   │  container  │        │
+│  │  rs()   │   │             │   │             │        │
+│  └────┬────┘   └──────┬──────┘   └──────┬──────┘        │
+└───────┼───────────────┼─────────────────┼───────────────┘
+        │               │                 │
+        ▼               ▼                 ▼
+┌───────────────────────────────────────────────────────┐
+│                  Docker Engine (CLI)                   │
+│       docker ps -a  /  docker logs  /  docker inspect │
+└───────────────────────────────────────────────────────┘
+```
+
+The agent follows the **ReAct (Reasoning + Acting)** paradigm:
+1. **Reason** — The LLM thinks about what information it needs
+2. **Act** — It calls the appropriate Docker tool
+3. **Observe** — It reads the tool output
+4. **Repeat** — Until it has enough context to answer
+5. **Respond** — Delivers a final, grounded diagnosis
+
+---
+
+## 📦 Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+- **Python 3.11+**
+- **Docker** — running and accessible via CLI
+- **Ollama** — for running the local LLM
+
+```bash
+# Verify Docker is running
+docker ps
+
+# Verify Ollama is installed
+ollama --version
+```
+
+---
+
+## 🚀 Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/docker-troubleshooter-agent.git
+cd docker-troubleshooter-agent
+```
+
+### 2. Create a virtual environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate        # macOS/Linux
+# .\venv\Scripts\activate       # Windows
+```
+
+### 3. Install dependencies
+
+```bash
+pip install langchain langchain-ollama
+```
+
+Or, if a `requirements.txt` is present:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Pull the LLM model via Ollama
+
+```bash
+ollama pull gemma4
+```
+
+> 💡 This downloads the `gemma4` model locally (~5GB). It only needs to happen once.
+
+---
+
+## ▶️ Usage
+
+```bash
+python3 module-2/agent.py
+```
+
+You'll see the interactive prompt:
+
+```
+Docker Troubleshooter Agent
+------------------------------
+Ask me about your Docker containers. Type 'quit' to exit.
+
+>
+```
+
+### Example queries you can try
+
+```bash
+# Container health
+> Which containers are currently stopped?
+> Are any containers in a restart loop?
+
+# Log analysis
+> What errors are in the nginx container logs?
+> Why did my redis container crash?
+
+# Deep inspection
+> What port is my postgres container exposed on?
+> What environment variables is the api container using?
+> Is my web container attached to a custom network?
+
+# General diagnosis
+> Something is wrong with my app container. Can you investigate?
+> Which container is most likely causing issues right now?
+```
+
+Type `quit`, `exit`, or `q` to exit the agent.
+
+---
+
+## 🔧 Available Tools
+
+The agent has access to three core Docker tools:
+
+### `list_containers()`
+Runs `docker ps -a` to get a full picture of all containers — their names, status, image, and ports.
+
+### `get_logs(container_name)`
+Fetches the last 50 lines from a container's stdout/stderr — the agent uses this to spot crashes, errors, or misconfigurations.
+
+### `inspect_container(container_name)`
+Runs `docker inspect` to retrieve the full container metadata — network config, environment variables, volume mounts, restart policies, and more.
+
+---
+
+## 🔄 Switching the LLM
+
+The agent uses `gemma4` by default, but you can swap in any model supported by Ollama:
+
+```python
+# In agent.py
+llm = ChatOllama(model="llama3.2", temperature=0)   # Meta Llama 3.2
+llm = ChatOllama(model="mistral", temperature=0)     # Mistral 7B
+llm = ChatOllama(model="qwen2.5", temperature=0)     # Qwen 2.5
+```
+
+> 💡 For best results, use models with strong instruction-following and tool-use capabilities. `temperature=0` keeps the agent deterministic and focused.
+
+---
+
+## 🗂️ Project Structure
+
+```
+docker-troubleshooter-agent/
 │
-├── frontend/           # React app
-├── backend/            # Node.js API
-├── k8s/                # Kubernetes manifests
-├── .github/workflows/  # CI/CD pipelines
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
+├── module-2/
+│   └── agent.py          # Main agent — tools, LLM setup, ReAct loop
+│
+├── requirements.txt      # Python dependencies
+└── README.md             # You're reading it
 ```
----
-
-## ☸️ Deployment Process (EKS + Argo CD)
-
-1. Build and push Docker image
-2. Update Kubernetes manifests
-3. Push changes to GitHub
-4. Argo CD detects changes
-5. Automatically deploys to EKS cluster
-
-📌 Argo CD ensures **continuous synchronization** between GitHub and the cluster.
 
 ---
 
-## 📊 Monitoring Setup
+## 🛣️ Roadmap
 
-* **Prometheus** collects metrics from Kubernetes cluster
-* **Grafana** visualizes metrics via dashboards
-
-Example metrics:
-
-* CPU usage
-* Memory usage
-* Pod health
-* Application performance
+- [ ] Add `docker stats` tool for real-time resource monitoring
+- [ ] Add `docker network inspect` for network topology diagnosis
+- [ ] Support multi-container issue correlation (e.g., service mesh problems)
+- [ ] Add a `fix_container` tool with safe remediation actions
+- [ ] Web UI frontend (Streamlit or Gradio)
+- [ ] Support for Docker Compose projects (`docker compose ps`, `docker compose logs`)
+- [ ] OpenAI / Anthropic model support as a fallback option
 
 ---
 
-## 📄 License
+<div align="center">
 
-This project is licensed under the MIT License.
+Built with 🐳 Docker · 🦜 LangChain · 🦙 Ollama
 
----
+*If this saved you a debugging session, give it a ⭐*
 
-## ⭐ Final Note
-
-This project showcases **real-world DevSecOps practices**, combining:
-
-* CI/CD automation
-* Security-first pipeline
-* GitOps deployment
-* Kubernetes orchestration
-
-Perfect for **DevOps portfolios, interviews, and production-ready architecture demonstrations**.
-
----
+</div>
