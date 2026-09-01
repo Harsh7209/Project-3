@@ -1,180 +1,146 @@
-# 🚀 GitOps Blogging Application (DevSecOps Enabled)
+# 🚀 Terraform Capstone Project
 
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-blue)
-![Docker](https://img.shields.io/badge/Container-Docker-blue)
-![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-blue)
-![GitOps](https://img.shields.io/badge/GitOps-ArgoCD-orange)
-![Monitoring](https://img.shields.io/badge/Monitoring-Prometheus%20%7C%20Grafana-green)
+## 📖 Project Overview  
+The Terraform Capstone Project automates the deployment of AWS resources including EC2, S3, and DynamoDB. This project demonstrates practical use of Terraform to create a scalable architecture across multiple environments.
 
----
+## 🏗️ Architecture  
+The architecture consists of various AWS services integrated to work seamlessly.
+- **EC2 Instances**: Used to run applications.
+- **S3 Buckets**: For storing application data and backup.
+- **DynamoDB**: NoSQL database for storing application state.
 
-## 📌 Project Overview
+## 📂 Project Structure  
+```
+terraform-capstone/
+├── main.tf              # Main Terraform configuration
+├── variables.tf         # Input variables
+├── outputs.tf           # Outputs after deployment
+├── modules/             # Contains reusable modules
+│   ├── ec2/             # EC2 module
+│   ├── s3/              # S3 module
+│   └── dynamodb/        # DynamoDB module
+└── env/                # Environment specific configurations
+    ├── dev/
+    ├── stg/
+    └── prod/
+``` 
 
-This project is a **full-stack blogging application** built using modern web technologies and deployed using a **complete GitOps + DevSecOps pipeline**.
+## 🔧 Prerequisites  
+- AWS Account  
+- Terraform installed on your local machine  
+- AWS CLI configured  
 
-It demonstrates **end-to-end automation**, starting from code commit to secure deployment on a **Kubernetes (Amazon EKS) cluster**, ensuring scalability, security, and reliability.
+## 🏁 Getting Started Guide  
+### Step-by-Step Instructions  
+1. Clone the repository:  
+   ```bash  
+   git clone https://github.com/Harsh7209/terraform-capstone.git  
+   ```  
+2. Navigate to the project directory:  
+   ```bash  
+   cd terraform-capstone  
+   ```  
+3. Initialize Terraform:  
+   ```bash  
+   terraform init  
+   ```  
+4. Plan your deployment:  
+   ```bash  
+   terraform plan  
+   ```  
+5. Apply the changes:  
+   ```bash  
+   terraform apply  
+   ```  
 
----
+## 🌍 Environment Configuration  
+| Environment | EC2 Instance Type | S3 Bucket Name      | DynamoDB Table Name |  
+|-------------|-------------------|----------------------|----------------------|  
+| Dev         | t2.micro          | dev-bucket           | dev-table            |  
+| Staging     | t2.medium         | stg-bucket           | stg-table            |  
+| Production   | t2.large          | prod-bucket          | prod-table           |  
+
+## 🔧 Troubleshooting
+# Issue: "Provider AWS not found"
+Solution: Run terraform init to download the AWS provider.
+
+# Issue: "Invalid provider version"
+Solution: Update AWS provider version in terraform.tf or run:
+
+# Bash
+terraform init -upgrade 
+
+Issue: "Workspace does not exist" 
+
+Solution: Create the workspace first:
+
+# Bash
+terraform workspace new <workspace-name> 
+
+Issue: "Insufficient permissions" 
+
+Solution: Verify AWS credentials:  
+
+# Bash
+aws sts get-caller-identity 
+
+Ensure your IAM user has EC2, S3, and DynamoDB permissions.
+
+# Issue: "Resource already exists"
+Solution: Check AWS Console for existing resources 
+
+# Bash
+terraform destroy
+terraform apply
+Issue: "Invalid SSH key"
+Solution: Update the public key in modules/ec2/main.tf
+
+
 
 ## ✨ Key Features
 
-* 📝 Create, Read, Update, Delete (CRUD) blog posts
-* 🔐 Secure DevSecOps CI/CD pipeline
-* ⚡ Fully automated deployment using GitOps
-* 🐳 Containerized application using Docker
-* ☸️ Kubernetes orchestration on Amazon EKS
-* 🔍 Integrated security scanning at multiple stages
-* 📊 Monitoring with Prometheus & Grafana
-* 🔄 Continuous deployment with Argo CD
+# 1. Multi-Environment Support
+Dev, Staging, and Production environments
+Independent state per environment using workspaces
+Automatic scaling based on environment
 
----
+# 2. Modular Design
+Reusable EC2, S3, and DynamoDB modules
+Each module is self-contained with its own variables
+Easy to add new modules
 
-## 🛠️ Tech Stack
+# 3. Scalability
+Use count parameter for dynamic resource creation
+Simple variable adjustment for resource scaling
+Supports adding new environments easily
+ # 4. Security
+Security group with SSH, HTTP, and HTTPS access
+Key pair for secure EC2 access
+DynamoDB with PAY_PER_REQUEST billing (no unused capacity)
+ # 5. Naming Convention
+Environment-based resource naming (e.g., dev-terra-server-1)
+Consistent tagging across all resources
+Easy resource identification in AWS Console
+# 6. Cost Optimization
+t3.micro instances (cost-effective)
+Configurable resource counts per environment
+DynamoDB PAY_PER_REQUEST billing
 
-| Layer            | Technology          |
-| ---------------- | ------------------- |
-| Frontend         | React.js            |
-| Backend          | Node.js (Express)   |
-| Containerization | Docker              |
-| Orchestration    | Kubernetes (EKS)    |
-| CI/CD            | GitHub Actions      |
-| GitOps           | Argo CD             |
-| Monitoring       | Prometheus, Grafana |
 
----
+## 🥇 Best Practices  
+- Use version control for your Terraform scripts.  
+- Regularly update your modules to include security patches.  
 
-## 🏗️ Architecture Diagram
 
-```mermaid
-flowchart LR
-    Dev[Developer] -->|Push Code| GitHub
-    GitHub -->|Trigger| GHA[GitHub Actions]
 
-    GHA --> Gitleaks
-    GHA --> OWASP
-    GHA --> Hadolint
+## 🚀 Future Enhancements  
+- Integration with CI/CD pipelines  
+- Add more AWS services like RDS and Lambda  
 
-    GHA --> Build[Docker Build]
-    Build --> Trivy
+## 👤 Author Information  
+- **Name**: Harsh  
+- **GitHub**: [Harsh7209](https://github.com/Harsh7209)  
+- **Email**: harshchoubey113@example.com  
 
-    Trivy --> DockerHub[(DockerHub)]
-    DockerHub --> Update[K8s Manifest Update]
-
-    Update --> GitHub
-
-    GitHub --> ArgoCD[Argo CD]
-    ArgoCD --> EKS[(Amazon EKS Cluster)]
-
-    EKS --> Prometheus
-    Prometheus --> Grafana
-```
-
----
-
-## 🔄 CI/CD + DevSecOps Workflow
-
-### Step-by-Step Pipeline
-
-1. 👨‍💻 Developer pushes code to GitHub
-2. ⚙️ GitHub Actions pipeline is triggered
-
-### 🔐 Security & Quality Checks
-
-* 🔍 **Gitleaks** → Detects secrets in code
-* 🛡️ **OWASP Dependency Check** → Finds vulnerable dependencies
-* 🐳 **Hadolint** → Lints Dockerfile
-
-### 🏗️ Build & Security
-
-* Docker image is built
-* 🔎 **Trivy** scans image for vulnerabilities
-
-### 🚀 Deployment Preparation
-
-* Image is pushed to DockerHub
-* Kubernetes manifests are updated with new image tag
-
-### 🔁 GitOps Deployment
-
-* Argo CD continuously monitors GitHub repository
-* Detects manifest changes
-* Automatically syncs and deploys to EKS
-
-✅ **Argo CD is fully configured and actively running this application on the Amazon EKS cluster.**
-
----
-
-## 🧰 Tools Used
-
-* Gitleaks
-* OWASP Dependency Check
-* Hadolint
-* Trivy
-* Docker
-* Kubernetes
-* GitHub Actions
-* Argo CD
-* Prometheus
-* Grafana
-
----
-
-## 📁 Folder Structure
-
-```
-project-root/
-│
-├── frontend/           # React app
-├── backend/            # Node.js API
-├── k8s/                # Kubernetes manifests
-├── .github/workflows/  # CI/CD pipelines
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
----
-
-## ☸️ Deployment Process (EKS + Argo CD)
-
-1. Build and push Docker image
-2. Update Kubernetes manifests
-3. Push changes to GitHub
-4. Argo CD detects changes
-5. Automatically deploys to EKS cluster
-
-📌 Argo CD ensures **continuous synchronization** between GitHub and the cluster.
-
----
-
-## 📊 Monitoring Setup
-
-* **Prometheus** collects metrics from Kubernetes cluster
-* **Grafana** visualizes metrics via dashboards
-
-Example metrics:
-
-* CPU usage
-* Memory usage
-* Pod health
-* Application performance
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## ⭐ Final Note
-
-This project showcases **real-world DevSecOps practices**, combining:
-
-* CI/CD automation
-* Security-first pipeline
-* GitOps deployment
-* Kubernetes orchestration
-
-Perfect for **DevOps portfolios, interviews, and production-ready architecture demonstrations**.
-
----
+---  
+This README is intended to provide all necessary information for deploying and using the resources configured through the Terraform Capstone project effectively.
